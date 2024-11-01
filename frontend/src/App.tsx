@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import EnhancedSearchForm, {
+  FormSchema,
+} from "./components/enhanced-search-form";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "./components/ui/card";
+import FormSelect from "@/components/form-select";
+
+const isValidIndex = (index: number | undefined | null): index is number =>
+  Number.isInteger(index) && typeof index === "number" && index >= 0;
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedForm, setSelectForm] = useState<FormSchema>();
+  const [selectedIndex, setSelectIndex] = useState<number>();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="flex justify-center items-center h-screen">
+      <Card className="w-full max-w-3xl mx-auto p-4">
+        {selectedForm && (
+          <button
+            onClick={() => setSelectForm(undefined)}
+            className="p-2 mt-4 ml-4 text-gray-600 hover:text-gray-900"
+          >
+            ← Zpátky
+          </button>
+        )}
+        <CardHeader>
+          <CardTitle>EMIS</CardTitle>
+          <CardDescription>Enhanced Medical Information Search</CardDescription>
+        </CardHeader>
+        {!selectedForm || !isValidIndex(selectedIndex) ? (
+          <FormSelect
+            onFormSelect={(schema, index) => {
+              setSelectForm(schema);
+              setSelectIndex(index);
+            }}
+          ></FormSelect>
+        ) : (
+          <EnhancedSearchForm
+            initialFormState={selectedForm}
+            index={selectedIndex}
+          />
+        )}
+      </Card>
+    </div>
+  );
 }
 
-export default App
+export default App;
