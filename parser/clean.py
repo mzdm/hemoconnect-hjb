@@ -31,38 +31,23 @@ def detect_encoding(file_path):
         print(f"Detected encoding: {encoding} with confidence {confidence}")
         return encoding
 
-
-def transform_csv(input_file_path, output_file_path=None):
-    # Load the CSV file
-    df = pd.read_csv(input_file_path)
-
-    # Assuming the last column needs to be split
-    last_column = df.columns[-1]
-
-    # Split the last column by double space and expand into new DataFrame
-    expanded_df = df[last_column].str.split('  ', expand=True)
-
-    # Rename the new columns appropriately (optional)
-    expanded_df.columns = [f'new_col_{i}' for i in range(expanded_df.shape[1])]
-
-    # Concatenate the original DataFrame with the new columns
-    result_df = pd.concat([df.iloc[:, :-1], expanded_df], axis=1)
-
-    # Save the resulting DataFrame back to a CSV file if needed
-    if output_file_path:
-        result_df.to_csv(output_file_path, index=False)
-
-    return result_df
-
-# Example usage:
+def iterate_latest_column(file_path):
+    with open(file_path, mode='r', encoding='windows-1250') as file:
+        reader = csv.reader(file)
+        headers = next(reader)
+        for row in reader:
+            latest_column_value = row[-1]
+            print(latest_column_value)
 
 
 input_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned.csv'
 output_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned2.csv'
-output_file_path3 = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned3.csv'
 
 # detect_encoding(input_file_path)
 
 # convert_to_csv(input_file_path, output_file_path)
 # merge_last_two_columns(input_file_path, output_file_path)
-transformed_df = transform_csv(output_file_path, output_file_path3)
+# transformed_df = transform_csv(output_file_path, output_file_path3)
+
+iterate_latest_column(output_file_path)
+
