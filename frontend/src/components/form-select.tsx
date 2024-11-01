@@ -1,14 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  FileText,
-  ClipboardList,
-  FormInput,
-  Plus,
-  Trash2,
-  FileDown,
-  FileUp,
-} from "lucide-react";
+import { FileText, Plus, Trash2, FileDown, FileUp } from "lucide-react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
 
@@ -107,18 +99,8 @@ export default function Component(
   );
 
   // Get appropriate icon based on form field types
-  const getFormIcon = (form: FormSchema) => {
-    const hasMultipleTypes = new Set(form.formFields.map(f => f.type)).size > 1;
-    if (hasMultipleTypes) {
-      return <FormInput className="h-4 w-4" />;
-    }
-    const type = form.formFields[0]?.type;
-    switch (type) {
-      case "boolean":
-        return <ClipboardList className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
-    }
+  const getFormIcon = () => {
+    return <FileText className="h-4 w-4" />;
   };
 
   if (!savedForms?.length) {
@@ -144,7 +126,7 @@ export default function Component(
                 className="w-full justify-start gap-2"
                 onClick={() => onFormSelect(form, index)}
               >
-                {getFormIcon(form)}
+                {getFormIcon()}
                 <span className="truncate">{form.formTitle}</span>
                 <div className="hidden group-hover:block ml-auto">
                   <Button
