@@ -49,7 +49,11 @@ export default function Component({
     resolver: zodResolver(formSchema),
     defaultValues: initialFormState,
   });
-  const { control, handleSubmit } = form;
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = form;
   const { toast } = useToast();
 
   const { fields, append, remove } = useFieldArray({
@@ -66,14 +70,50 @@ export default function Component({
     setSavedForms(newForms);
     toast({
       title: "Uloženo",
-      description: "Formulář byl uložen do uložených formulářů.",
+      description: "Formulář byl uložen.",
       variant: "default",
+    });
+  };
+
+  const onError = () => {
+    function traverseErrors(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      errors: Record<string, any>,
+      prefix = ""
+    ): string[] {
+      const messages: string[] = [];
+
+      for (const [key, value] of Object.entries(errors)) {
+        if (value?.message) {
+          messages.push(`${prefix}${value.message}`);
+        } else if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            if (typeof item === "object") {
+              messages.push(
+                ...traverseErrors(item, `${prefix}${key} ${index + 1}: `)
+              );
+            }
+          });
+        } else if (typeof value === "object") {
+          messages.push(...traverseErrors(value, `${prefix}${key}: `));
+        }
+      }
+
+      return messages;
+    }
+
+    const errorMessages = traverseErrors(errors);
+
+    toast({
+      title: "Chyba při ukládání",
+      description: errorMessages.join("\n"),
+      variant: "destructive",
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <CardContent className="space-y-6">
           <FormField
             control={control}

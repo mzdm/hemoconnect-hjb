@@ -113,7 +113,14 @@ export function FormFieldComponent({
       </div>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <FormLabel>Klíčová slova</FormLabel>
+          <FormLabel>
+            Klíčová slova{" "}
+            {keywords.length === 0 && (
+              <div className="text-xs text-gray-600">
+                Přidejte alespoň jedno klíčové slovo
+              </div>
+            )}
+          </FormLabel>
 
           <Button
             type="button"
