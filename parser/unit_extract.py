@@ -1,31 +1,26 @@
 import json
+import re
 
 from quantulum3 import parser
 from const import TEST_INPUT
 import json
 from quantulum3 import parser
 from typing import List, Dict
-
-class KeyValue(BaseModel):
-    original_tag: str
-    key: str
-    value: str
-
-class Response(BaseModel):
-    values: List[KeyValue]
+from report_types import KeyValue, Response
 
 def extract_units(data):
     new_values = []
     for item in data.values:
-        quants = parser.parse(item.value)
+        quants = parser.parse(item.value, lang="cs_CZ")
         if quants:
-            unit = quants[0].unit.name if quants[0].unit else ""
-            value_without_unit = quants[0].surface
-            item.value = value_without_unit
+            unit = quants[0].value
+
+            # value_without_unit = re.sub(r"\s*"+unit+r"\s*", "", item.value)
+            # item.value = value_without_unit
             new_key_value = KeyValue(
                 original_tag=item.original_tag + "_unit",
                 key=item.key + "_unit",
-                value=unit
+                value=str(unit)
             )
             new_values.append(new_key_value)
         new_values.append(item)
@@ -33,7 +28,8 @@ def extract_units(data):
 
 with open("response.json", "r") as file:
     data = json.load(file)
-    response = Response(**data)
+    data_dict = data["parsed"]
+    response = Response(**data_dict)
 
 updated_values = extract_units(response)
 print(updated_values)
