@@ -16,17 +16,24 @@ export function Schemes() {
         <PageLayout>
         {!selectedForm && (
         <>
-          <h3 className="text-lg">Formuláře</h3>
-          <FormSelect
-            onFormSelect={(schema, index) => {
-              setSelectForm(schema);
-              setSelectIndex(index);
-            } } 
-          />
+          <h3 className="text-lg">Šablony</h3>
+          <p className="text-md text-gray-500 w-3/6">
+            Šablony poskytují umělé inteligenci pokyny pro zpracování zpráv z nemocničního informačního systému (NIS).
+            <br />Následně slouží k snadnému zpracovávání, a ukládání dat do registrů.
+          </p>
+          <div className="h-4" />
+          <div>
+            <FormSelect
+              onFormSelect={(schema, index) => {
+                setSelectForm(schema);
+                setSelectIndex(index);
+              } } 
+            />
+          </div>
         </>
       )}
       {selectedForm && isValidIndex(selectedIndex) && (
-        <Card className="w-full max-w-3xl mx-auto p-4 ">
+        <Card className="w-full max-w-3xl mx-auto p-4">
         {selectedForm && (
           <button
             onClick={() => setSelectForm(undefined)}
@@ -46,18 +53,6 @@ export function Schemes() {
         </Card>
 
       )}
-      {/* {!selectedForm && (
-        <>
-          <div className="h-4" />
-          <h2>Políčka</h2>
-          <FormSelect
-            onFormSelect={(schema, index) => {
-              setSelectForm(schema);
-              setSelectIndex(index);
-            } } 
-          />
-        </>
-      )} */}
       </PageLayout>
     )
 }

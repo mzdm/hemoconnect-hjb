@@ -100,9 +100,9 @@ export default function Component({
             name="formTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Název formuláře</FormLabel>
+                <FormLabel>Název šablony</FormLabel>
                 <FormControl>
-                  <Input placeholder="Zadejte název formuláře" {...field} />
+                  <Input placeholder="Zadejte název šablony" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -113,9 +113,9 @@ export default function Component({
             name="formCode"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Kód formuláře</FormLabel>
+                <FormLabel>Kód diagnózy</FormLabel>
                 <FormControl>
-                  <Input placeholder="Zadejte kód formuláře" {...field} />
+                  <Input placeholder="Zadejte kód diagnózy" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -144,7 +144,7 @@ export default function Component({
         <CardFooter className="flex justify-between">
           <div className="space-x-2">
             <Button type="submit" variant="outline">
-              <Save className="h-4 w-4 mr-2" /> Uložit formulář
+              <Save className="h-4 w-4 mr-2" /> Uložit šablonu
             </Button>
           </div>
         </CardFooter>

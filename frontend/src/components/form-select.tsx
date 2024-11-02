@@ -29,7 +29,7 @@ export default function Component(
         }
       >
         <Plus className="h-4 w-4" />
-        Vytvořit formulář
+        Vytvořit šablonu
       </Button>
       <div className="flex gap-4 justify-center items-center mt-4">
         <Button
@@ -49,7 +49,7 @@ export default function Component(
           }}
         >
           <FileDown />
-          Exportovat formuláře
+          Exportovat šablony
         </Button>
 
         <Button
@@ -83,7 +83,7 @@ export default function Component(
           }}
         >
           <FileUp />
-          Importovat formuláře
+          Importovat šablony
         </Button>
       </div>
     </>

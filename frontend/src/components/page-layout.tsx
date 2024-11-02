@@ -17,7 +17,7 @@ export const PageLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
             <NavigationMenu className="flex gap-8">
               <NavigationMenuLink className={`text-lg font-semibold ${matches[0]?.pathname === '/' ? 'text-cyan-600' : undefined}`} href="/">Přehled</NavigationMenuLink>
-              <NavigationMenuLink className={`text-lg font-semibold ${matches[0]?.pathname === '/schemes' ? 'text-cyan-600' : undefined}`} href="/schemes">Schémata</NavigationMenuLink>
+              <NavigationMenuLink className={`text-lg font-semibold ${matches[0]?.pathname === '/schemes' ? 'text-cyan-600' : undefined}`} href="/schemes">Šablony</NavigationMenuLink>
             </NavigationMenu>
 
             <div className="flex-grow flex-shrink" />
@@ -32,7 +32,9 @@ export const PageLayout: React.FC<PropsWithChildren> = ({ children }) => {
         
         <div className="h-8" />
 
-        {children}
+        <div style={{ maxWidth: "1200px" }} className="mx-auto w-full">
+          {children}
+        </div>
       </div>
     )
 }
