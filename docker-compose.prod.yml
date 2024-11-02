@@ -57,6 +57,8 @@ services:
       dockerfile: Dockerfile
     networks:
       - web
+    environment:
+      - VITE_API_URL="https://api.hjb.mesh.sk/api"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${BASE_DOMAIN}`)"
