@@ -1,18 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileText, Plus, Trash2, FileDown, FileUp } from "lucide-react";
-import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
-
-type FormSchema = {
-  formTitle: string;
-  formFields: {
-    title: string;
-    type: "boolean" | "date" | "numeric" | "text";
-    keywords: string[];
-    unit?: string | undefined;
-  }[];
-};
+import { ScrollArea } from "./ui/scroll-area";
+import { useSavedForms } from "@/hooks/use-saved-forms";
+import { FormSchema } from "@/hooks/form-schema";
 
 export default function Component(
   {
@@ -23,10 +14,7 @@ export default function Component(
     onFormSelect: () => {},
   }
 ) {
-  const [savedForms, setSavedForms] = useLocalStorage<FormSchema[]>(
-    "saved-forms",
-    []
-  );
+  const [savedForms, setSavedForms] = useSavedForms();
   const { toast } = useToast();
   const plusButton = (
     <>
@@ -34,7 +22,7 @@ export default function Component(
         variant="default"
         className="w-full justify-center gap-2"
         onClick={() =>
-          onFormSelect({ formTitle: "", formFields: [] }, savedForms.length + 1)
+          onFormSelect({ formTitle: "", formFields: [] }, savedForms.length)
         }
       >
         <Plus className="h-4 w-4" />
