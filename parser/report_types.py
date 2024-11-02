@@ -18,7 +18,7 @@ class ReportWithMeta():
     values: list[KeyValueWithMeta]
 
     patient_id: str
-    doctor_id: str
+    report_id: str
     report_date: str
 
 class Response(BaseModel):
