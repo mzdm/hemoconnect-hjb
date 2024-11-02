@@ -36,6 +36,14 @@ services:
       dockerfile: Dockerfile
       platforms:
         - linux/amd64
+    networks:
+      - web
+      - internal
+    environment:
+      - IRIS_HOST=iris
+      - IRIS_PORT=1972
+      - IRIS_USERNAME=${IRIS_USERNAME}
+      - IRIS_PASSWORD=${IRIS_PASSWORD}
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.${BASE_DOMAIN}`)"
@@ -48,7 +56,6 @@ services:
       dockerfile: Dockerfile
     networks:
       - web
-      - internal
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${BASE_DOMAIN}`)"
@@ -56,8 +63,30 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
       - "traefik.http.services.frontend.loadbalancer.server.port=80"
 
+  iris:
+    image: intersystemsdc/iris-community:latest
+    container_name: iris-comm-prod
+    restart: unless-stopped
+    environment:
+      - IRIS_PASSWORD=${IRIS_PASSWORD}
+      - IRIS_USERNAME=${IRIS_USERNAME}
+      - ISC_DATA_DIRECTORY=/external/dur
+    ports:
+      - "1972:1972"
+      - "52773:52773"
+    networks:
+      - internal
+    volumes:
+      - iris-data:/external/dur
+    labels:
+      - "traefik.enable=false"
+
 networks:
   web:
     name: web
   internal:
     name: internal
+
+volumes:
+  iris-data:
+    name: iris-data-prod
