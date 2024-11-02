@@ -1,9 +1,7 @@
 import csv
-
-import pandas as pd
-from dotenv import load_dotenv
 from os import getenv
-from clean import detect_encoding
+
+from dotenv import load_dotenv
 
 load_dotenv()
 LAB_FILE_PATH = getenv('LAB_UNCLEANED_FILE_PATH')
@@ -42,10 +40,10 @@ def clean_lab_csv():
             # If some row has a value in dupe column, move the value with the same key to the original column
             for row in duplicated_rows:
                 for header in headers:
-                    print(header)
+                    # print(header)
                     if header.endswith('_dupe') and header in row and row[header]:
-                        tst = row[header]
-                        print('val is', tst)
+                        # tst = row[header]
+                        # print('val is', tst)
                         original_header = header.replace('_dupe', '')
                         row[original_header] = row[header]
                         row[header] = ''
@@ -54,7 +52,9 @@ def clean_lab_csv():
             cleaned_rows = []
             for row in duplicated_rows:
                 cleaned_row = {key: value for key, value in row.items() if not key.endswith('_dupe')}
-                cleaned_rows.append(cleaned_row)
+                # if ic_vys value is empty, do not append the row
+                if cleaned_row['ic_vys'] != '':
+                    cleaned_rows.append(cleaned_row)
 
             # Update headers to exclude _dupe columns
             cleaned_headers = [header for header in headers if not header.endswith('_dupe')]
@@ -62,7 +62,7 @@ def clean_lab_csv():
             with open(LAB_FILE_PATH.replace('.csv', '_cleaned2.csv'), mode='w', encoding='windows-1250', newline='') as outfile:
                 writer = csv.DictWriter(outfile, fieldnames=cleaned_headers, delimiter=';')
                 writer.writeheader()
-                writer.writerows(duplicated_rows)
+                writer.writerows(cleaned_rows)
     except Exception as e:
         print(f"An error occurred: {e}")
 
