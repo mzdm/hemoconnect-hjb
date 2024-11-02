@@ -72,8 +72,6 @@ export function FormFieldComponent({
   const title = useWatch({ control, name: `formFields.${index}.title` });
   const type = useWatch({ control, name: `formFields.${index}.type` });
 
-  console.log(type, type === 'select')
-
   return (
     <AccordionItem value={`formField-${index}`}>
       <AccordionTrigger><span className={`${title.length > 0 ? undefined : "text-gray-500"}`}>{title.length > 0 ? title : "Prázdné pole"}</span></AccordionTrigger>
