@@ -21,7 +21,16 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         super().end_headers()
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
 
     def do_GET(self):
         if self.path == '/api/hello':
@@ -29,7 +38,11 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
             self.wfile.write(b'hello milan')
-        elif self.path == '/api/query':
+        else:
+            super().do_GET()
+
+    def do_POST(self):
+        if self.path == '/api/query':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
             query_string = json.loads(post_data.decode('utf-8')).get('patientId', '')
@@ -41,8 +54,8 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(json.dumps(patient_ids).encode('utf-8'))
-        else:
-            super().do_GET()
+        # else:
+        #     super().do_POST()
 
 
 # os.chdir('/path/to/your/files')
