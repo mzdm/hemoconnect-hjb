@@ -110,9 +110,8 @@ export default function Component(
       <ScrollArea className="h-[400px] w-full rounded-md border">
         <div className="p-4 space-y-2">
           {savedForms.map((form, index) => (
-            <div className="group flex items-center">
+            <div className="group flex items-center" key={index}>
               <Button
-                key={index}
                 variant="ghost"
                 className="w-full justify-start gap-2"
                 onClick={() => onFormSelect(form, index)}

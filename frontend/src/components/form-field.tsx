@@ -63,7 +63,14 @@ export function FormFieldComponent({
     name: `formFields.${index}.keywords` as `formFields.${number}.keywords`,
   })
 
+  const { fields: selectValues, append: appendSelectValue, remove: removeSelectValue } = useFieldArray({
+    control,
+    // @ts-expect-error dgaf react hook issue
+    name: 'formFields.0.selectValues' as `formFields.${number}.keywords`
+  })
+
   const title = useWatch({ control, name: `formFields.${index}.title` });
+  const type = useWatch({ control, name: `formFields.${index}.type` });
 
   return (
     <AccordionItem value={`formField-${index}`}>
@@ -145,6 +152,48 @@ export function FormFieldComponent({
                 )}
               />
             </div>
+            {type === 'select' && 
+              <div className="space-y-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  // @ts-expect-error dhaf
+                  onClick={() => appendSelectValue("")}
+                >
+                  <Plus className="h-4 w-4 mr-2" /> Přidat hodnotu
+                </Button>
+                {selectValues.map((_, selectValueIndex) => (
+                  <div key={selectValueIndex} className="flex items-start space-x-2">
+                    <FormField
+                      control={control}
+                      name={`formFields.${index}.selectValues.${selectValueIndex}`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormControl>
+                            <Input
+                              placeholder={`Hodnota ${selectValueIndex + 1}`}
+                              {...field}
+                              className="flex-grow"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => removeSelectValue(selectValueIndex)}
+                    >
+                      <Minus className="h-4 w-4" />
+                      <span className="sr-only">Odebrat hodnotu</span>
+                    </Button>
+                  </div>
+                ))}
+            </div>
+          }
           </div>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -168,7 +217,7 @@ export function FormFieldComponent({
               </Button>
             </div>
             {keywords.map((_, keywordIndex) => (
-              <div key={keywordIndex} className="flex items-center space-x-2">
+              <div key={keywordIndex} className="flex items-start space-x-2">
                 <FormField
                   control={control}
                   name={`formFields.${index}.keywords.${keywordIndex}`}

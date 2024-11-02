@@ -10,10 +10,8 @@ import { useDebouncedCallback } from 'use-debounce'
 import { useNavigate } from "react-router-dom";
 
 function App() {
+  const searchRef = React.useRef('')
 
-  console.log(import.meta.env.VITE_API_URL)
-
-  const [search, setSearch] = React.useState<string>("") 
 
   const { data, refetch: refetchAutocomplete } = useQuery({
     queryKey: ['autocomplete'],
@@ -24,7 +22,7 @@ function App() {
           "Content-Type": "application/json"
         },
         method: "POST",
-        body: JSON.stringify({ patientId: search }),
+        body: JSON.stringify({ patientId: searchRef.current }),
       })
 
       const _data = await data.json()
@@ -35,7 +33,7 @@ function App() {
 
   const debounced = useDebouncedCallback(async () => {
     refetchAutocomplete()
-  }, 200, {})
+  }, 250, {})
 
   const navigate = useNavigate()
 
@@ -43,7 +41,13 @@ function App() {
     <PageLayout>
       <h3 className="text-lg">Pacienti</h3>
       <Input placeholder="Začněte psát IC pacienta" onKeyDown={(e: KeyboardEvent<HTMLInputElement> & { target: { value: string }}) => {
-        setSearch(e.target.value)
+        searchRef.current = e.target.value
+
+        if (e.key === 'Enter') {
+          refetchAutocomplete()
+          return
+        }
+
         debounced()
       }} />
       <div className="h-4" />
