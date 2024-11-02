@@ -15,7 +15,10 @@ client = OpenAI(api_key=_OPENAI_API_KEY)
 completion = client.beta.chat.completions.parse(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "You are supposed to export key value pairs from the given text and store their original tag."},
+        {
+            "role": "system", 
+            "content": "You are supposed to export key value pairs from the given text and store their original tag."
+        },
         {
             "role": "user",
             "content": TEST_INPUT
