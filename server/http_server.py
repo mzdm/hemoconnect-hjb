@@ -25,21 +25,21 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
         super().end_headers()
 
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        self.end_headers()
+    # def do_OPTIONS(self):
+    #     self.send_response(200)
+    #     self.send_header('Access-Control-Allow-Origin', '*')
+    #     self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    #     self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+    #     self.end_headers()
 
-    def do_GET(self):
-        if self.path == '/api/hello':
-            self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
-            self.end_headers()
-            self.wfile.write(b'hello milan')
-        else:
-            super().do_GET()
+    # def do_GET(self):
+    #     if self.path == '/api/hello':
+    #         self.send_response(200)
+    #         self.send_header('Content-type', 'text/plain')
+    #         self.end_headers()
+    #         self.wfile.write(b'hello milan')
+    #     else:
+    #         super().do_GET()
 
     def do_POST(self):
         if self.path == '/api/query':
