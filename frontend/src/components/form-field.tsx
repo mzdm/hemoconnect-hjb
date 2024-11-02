@@ -29,6 +29,21 @@ interface FormFieldComponentProps {
   onRemove: () => void;
 }
 
+const formFieldTypeOptions: Array<{ label: string, value: FormSchema["formFields"][number]["type"] }> = [{
+  label: "Číslo",
+  value: "number",
+}, {
+  label: "Text",
+  value: "string",
+}, {
+  label: "Datum",
+  value: "date",
+},{
+  label: "Výběr z hodnot",
+  value: "select",
+}
+]
+
 export function FormFieldComponent({
   control,
   index,
@@ -52,7 +67,7 @@ export function FormFieldComponent({
 
   return (
     <AccordionItem value={`formField-${index}`}>
-      <AccordionTrigger>{title}</AccordionTrigger>
+      <AccordionTrigger><span className={`${title.length > 0 ? undefined : "text-gray-500"}`}>{title.length > 0 ? title : "Prázdné pole"}</span></AccordionTrigger>
       <AccordionContent>
         <div className="space-y-4 p-4 border rounded-lg">
           <div className="flex items-center justify-between gap-4">
@@ -69,8 +84,7 @@ export function FormFieldComponent({
                 </FormItem>
               )}
             />
-            {index > 0 && (
-              <FormItem>
+            <FormItem>
                 <FormLabel className="opacity-0 select-none">test</FormLabel>
 
                 <Button
@@ -82,7 +96,6 @@ export function FormFieldComponent({
                   <Minus className="h-4 w-4 mr-2" /> Odebrat pole
                 </Button>
               </FormItem>
-            )}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -119,9 +132,11 @@ export function FormFieldComponent({
                           <SelectValue placeholder="Vyberte typ" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="number">Číslo</SelectItem>
-                          <SelectItem value="string">Text</SelectItem>
-                          <SelectItem value="date">Datum</SelectItem>
+                          {formFieldTypeOptions.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </FormControl>
@@ -170,8 +185,7 @@ export function FormFieldComponent({
                     </FormItem>
                   )}
                 />
-                {keywordIndex > 0 && (
-                  <Button
+                <Button
                     type="button"
                     variant="outline"
                     size="icon"
@@ -180,7 +194,6 @@ export function FormFieldComponent({
                     <Minus className="h-4 w-4" />
                     <span className="sr-only">Odebrat klíčové slovo</span>
                   </Button>
-                )}
               </div>
             ))}
           </div>

@@ -36,8 +36,8 @@ export function Schemes() {
           </button>
         )}
         <CardHeader>
-          <CardTitle>EMIS</CardTitle>
-          <CardDescription>Enhanced Medical Information Search</CardDescription>
+          <CardTitle>{selectedForm.formTitle}</CardTitle>
+          <CardDescription>ID: {selectedForm.uuid}</CardDescription>
         </CardHeader>
         <EnhancedSearchForm
           initialFormState={selectedForm}

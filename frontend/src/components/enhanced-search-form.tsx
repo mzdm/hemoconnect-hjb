@@ -108,6 +108,19 @@ export default function Component({
               </FormItem>
             )}
           />
+          <FormField
+            control={control}
+            name="formCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Kód formuláře</FormLabel>
+                <FormControl>
+                  <Input placeholder="Zadejte kód formuláře" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <Accordion type="single" collapsible>
             {fields.map((field, index) => (
               <FormFieldComponent
