@@ -3,7 +3,7 @@ import os
 
 from flask import Flask, request, jsonify
 
-from db import DBHandler  # Now using the iris-based DBHandler
+# from db import DBHandler  # Now using the iris-based DBHandler
 from server.models.form_schema import FormSchema
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ ID_PACS_CSV_PATH = 'data/id_pacs.csv'
 PATIENT_AMB_CSV_PATH = 'data/patient_amb.csv'
 id_pacs_data = []
 patient_amb_data = []
-db_handler = DBHandler()
+# db_handler = DBHandler()
 
 def preload_data():
     global id_pacs_data
@@ -27,8 +27,8 @@ def preload_data():
         patient_amb_data = [row for row in reader]
 
     # Initialize database connection and run migrations
-    db_handler.connect()
-    db_handler.migrate()
+    # db_handler.connect()
+    # db_handler.migrate()
 
 @app.route('/api/query', methods=['POST'])
 def query_patient_ids():
@@ -58,15 +58,11 @@ def submit_form():
     try:
         form = FormSchema(**data)
         form_schema = form.dict()
-        return jsonify(form_schema), 201
+        return 'succ', 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-@app.route('/api/hello', methods=['GET'])
-def say_hello():
-    return 'hello milan'
 
 @app.after_request
 def add_headers(response):
@@ -77,8 +73,8 @@ def add_headers(response):
 
 if __name__ == '__main__':
     os.chdir(os.curdir)  # or set to your specific path
-    try:
-        preload_data()
-        app.run(port=PORT, debug=True)
-    finally:
-        db_handler.close()
+    # try:
+    preload_data()
+    app.run(port=PORT, debug=True)
+    # finally:
+    #     db_handler.close()
