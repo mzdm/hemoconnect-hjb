@@ -78,7 +78,7 @@ services:
     networks:
       - internal
     volumes:
-      - iris-data:/external/dur
+      - ./iris-data:/external/dur
     labels:
       - "traefik.enable=false"
 
@@ -87,7 +87,3 @@ networks:
     name: web
   internal:
     name: internal
-
-volumes:
-  iris-data:
-    name: iris-data-prod
