@@ -36,6 +36,8 @@ services:
       dockerfile: Dockerfile
       platforms:
         - linux/amd64
+    depends_on:
+      - iris
     networks:
       - web
       - internal
