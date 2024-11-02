@@ -35,13 +35,18 @@ export function FormFieldComponent({
   onRemove,
 }: FormFieldComponentProps) {
   const {
-    fields: keywords,
-    append: appendKeyword,
-    remove: removeKeyword,
+    fields,
+
   } = useFieldArray({
     control,
     name: "formFields",
   });
+
+  const { fields: keywords, append: appendKeyword, remove: removeKeyword } = useFieldArray({
+    control,
+    // @ts-expect-error dgaf react hook issue
+    name: `formFields.${index}.keywords` as `formFields.${number}.keywords`,
+  })
 
   const title = useWatch({ control, name: `formFields.${index}.title` });
 
@@ -130,7 +135,7 @@ export function FormFieldComponent({
             <div className="flex items-center justify-between">
               <FormLabel>
                 Klíčová slova{" "}
-                {keywords.length === 0 && (
+                {fields.length === 0 && (
                   <div className="text-xs text-gray-600">
                     Přidejte alespoň jedno klíčové slovo
                   </div>
@@ -141,12 +146,13 @@ export function FormFieldComponent({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => appendKeyword({ title: "", type: "string", keywords: [] })}
+                // @ts-expect-error dhaf
+                onClick={() => appendKeyword("")}
               >
                 <Plus className="h-4 w-4 mr-2" /> Přidat klíčové slovo
               </Button>
             </div>
-            {keywords.map((keyword, keywordIndex) => (
+            {keywords.map((_, keywordIndex) => (
               <div key={keywordIndex} className="flex items-center space-x-2">
                 <FormField
                   control={control}

@@ -16,7 +16,7 @@ export function Schemes() {
         <PageLayout>
         {!selectedForm && (
         <>
-          <h2>Formuláře</h2>
+          <h3 className="text-lg">Formuláře</h3>
           <FormSelect
             onFormSelect={(schema, index) => {
               setSelectForm(schema);
