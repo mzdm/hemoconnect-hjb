@@ -7,6 +7,7 @@ export const formFieldSchema = z.object({
   type: z.enum(["number", "string", "date", "select"], {
     required_error: "Typ pole je povinný",
   }),
+  selectValues: z.array(z.string().min(1, "Název pole je povinný")).optional(),
   keywords: z
     .array(z.string().min(1, "Klíčové slovo nesmí být prázdné"))
 });
