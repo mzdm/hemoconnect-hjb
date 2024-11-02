@@ -1,6 +1,5 @@
 import csv
 import os
-
 from flask import Flask, request, jsonify
 from openai import OpenAI
 
@@ -9,6 +8,7 @@ from server.models.form_schema import FormSchema, FormSchemaWithPatientMetadata,
 from server.parser.clean import ExportedCSV
 from server.parser.openai_parser import process_report, initialize_client
 from server.parser.report_types import KeyValueWithMeta
+from search import create_form_embeddings
 
 app = Flask(__name__)
 
@@ -20,6 +20,7 @@ id_pacs_data = []
 patient_amb_data = []
 amb_cleaned_data: ExportedCSV
 db_handler = DBHandler()
+db_handler.connect()
 
 openai_client: OpenAI = None
 
@@ -81,6 +82,8 @@ def submit_form():
         patientMetadata = request_data.patientMetadata
         find_row = find_patient_by_patient_metadata(patientMetadata)
         parsed_with_metadata: list[KeyValueWithMeta] = process_report(openai_client, find_row, form)
+        create_form_embeddings(db_handler, form_schema, str(form.uuid))
+
         return 'succ', 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400
