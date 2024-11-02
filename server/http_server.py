@@ -86,11 +86,10 @@ def submit_form():
         values = []
         for data in parsed_with_metadata:
             result = search(db_handler, data.dict(), str(form.uuid))
-            print(result)
-            values.append({
-                "db": result,
-                "data": data.dict()
-            })
+            result_data = data.dict()
+            result_data["confidence"] = result[0][1]
+            result_data["title"] = result[0][0]
+            values.append(result_data)
         return jsonify(values), 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400

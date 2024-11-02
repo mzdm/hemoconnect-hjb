@@ -45,7 +45,7 @@ def create_form_embeddings(db: DBHandler, form_schema: FormSchema, form_id: str)
 
 def search(db: DBHandler, field: KeyValueWithMeta, form_id: str):
     # Create a description string
-    description = f"{field['key']}"
+    description = f"{field['original_tag']}"
 
     field_embedding = create_embedding(description)
 
