@@ -1,17 +1,16 @@
 services:
   traefik:
-    image: traefik:v2.10
+    image: traefik:3.1
+    container_name: traefik
     command:
+      - "--api.insecure=true" # Enables the dashboard
       - "--api.dashboard=true"
-      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
     ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080" # Traefik dashboard
+      - "80:80" # Web entrypoint
+      - "8080:8080" # Dashboard port
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
@@ -49,10 +48,12 @@ services:
       dockerfile: Dockerfile
     networks:
       - web
+      - internal
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`${BASE_DOMAIN:-localhost}`)"
       - "traefik.http.routers.frontend.entrypoints=web"
+      - "traefik.http.services.frontend.loadbalancer.server.port=80" # Adjust port as needed
 
   iris:
     image: intersystemsdc/iris-community:latest
