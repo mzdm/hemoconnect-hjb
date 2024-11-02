@@ -13,7 +13,7 @@ def create_embedding(text):
   text = text.replace("\n", " ")
   return client.embeddings.create(input = [text], model="text-embedding-3-large").data[0].embedding
 
-def join_dict_value(dictvalues: list[Keyword | SelectValue]) -> str:
+def join_dict_value(dictvalues: list[any]) -> str:
     return ', '.join([keyword["value"] for keyword in dictvalues])
 
 def create_description(row):
