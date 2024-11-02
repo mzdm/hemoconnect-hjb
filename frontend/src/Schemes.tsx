@@ -39,7 +39,7 @@ export function Schemes() {
             onClick={() => setSelectForm(undefined)}
             className="p-2 mt-4 ml-4 text-gray-600 hover:text-gray-900"
           >
-            ← Zpátky
+            ← Zpět
           </button>
         )}
         <CardHeader>
