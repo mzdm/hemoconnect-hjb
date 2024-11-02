@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from os import getenv
 
 from unit_extract import extract_unit_via_regex
-from report_types import Response
+from report_types import KeyValueWithMeta, Response
 
 load_dotenv()
 
@@ -14,7 +14,7 @@ def initialize_client() -> OpenAI:
 
     return OpenAI(api_key=_OPENAI_API_KEY)
 
-def process_report(client: OpenAI, content: str, report_index: str):
+def process_report(client: OpenAI, content: str, report_index: str) -> list[KeyValueWithMeta]:
 
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
@@ -46,7 +46,8 @@ def process_report(client: OpenAI, content: str, report_index: str):
     # print(parsed)
 
     parsed_with_metadata = extract_unit_via_regex(parsed.values)
-    updated_values_dicts = [item.dict() for item in parsed_with_metadata]
-    with open(f'response-{report_index}.json', 'w') as json_file:
-        json_file.write(json.dumps(updated_values_dicts, indent=4))
+    return parsed_with_metadata
+    # updated_values_dicts = [item.dict() for item in parsed_with_metadata]
+    # with open(f'response-{report_index}.json', 'w') as json_file:
+    #     json_file.write(json.dumps(updated_values_dicts, indent=4))
     # print(parsed_with_metadata)

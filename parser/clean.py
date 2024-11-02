@@ -4,9 +4,11 @@ import chardet
 
 class ExportedCSV():
     _rows: list[str]
+    _header: list[str]
 
-    def __init__(self, rows) -> None:
+    def __init__(self, rows, header) -> None:
         self._rows = rows
+        self._header = header
 
     def __iter__(self):
         return self
@@ -54,7 +56,7 @@ def iterate_latest_column(file_path) -> ExportedCSV:
 
         # print(rows)
 
-        return ExportedCSV(rows)
+        return ExportedCSV(rows, headers)
         # for row in reader:
         #     latest_column_value = row[-1]
         #     print(latest_column_value)

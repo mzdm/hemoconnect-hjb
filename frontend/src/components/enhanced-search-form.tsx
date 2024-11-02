@@ -122,7 +122,7 @@ export default function Component({
             type="button"
             variant="outline"
             onClick={() =>
-              append({ title: "", unit: "", type: "string", keywords: [""] })
+              append({ title: "", unit: "", type: "string", keywords: [] })
             }
           >
             <Plus className="h-4 w-4 mr-2" /> Přidat pole
