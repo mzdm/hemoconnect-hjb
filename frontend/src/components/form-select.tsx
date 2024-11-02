@@ -8,10 +8,13 @@ import { FormSchema } from "@/hooks/form-schema";
 export default function Component(
   {
     onFormSelect,
+    readonly,
   }: {
     onFormSelect: (schema: FormSchema, index: number) => void;
+    readonly?: boolean
   } = {
     onFormSelect: () => {},
+    readonly: false
   }
 ) {
   const [savedForms, setSavedForms] = useSavedForms();
@@ -22,7 +25,7 @@ export default function Component(
         variant="default"
         className="w-full justify-center gap-2"
         onClick={() =>
-          onFormSelect({ formTitle: "", formFields: [] }, savedForms.length)
+          onFormSelect({ uuid: window.crypto.randomUUID(), formTitle: "", formCode: "", formFields: [] }, savedForms.length)
         }
       >
         <Plus className="h-4 w-4" />
@@ -97,7 +100,7 @@ export default function Component(
         <div className="text-center p-4 text-muted-foreground">
           Ještě jste si nevytvořil žádné formuláře.
         </div>
-        {plusButton}
+        {!readonly && plusButton}
       </>
     );
   }
@@ -116,7 +119,7 @@ export default function Component(
               >
                 {getFormIcon()}
                 <span className="truncate">{form.formTitle}</span>
-                <div className="hidden group-hover:block ml-auto">
+                {!readonly && <div className="hidden group-hover:block ml-auto">
                   <Button
                     variant="destructive"
                     size="icon"
@@ -129,7 +132,7 @@ export default function Component(
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </div>
+                </div>}
               </Button>
             </div>
           ))}

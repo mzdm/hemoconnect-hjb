@@ -8,6 +8,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { Schemes } from "./Schemes.tsx";
+import FormEdit from "./FormEdit.tsx";
 
 
 const router = createBrowserRouter([{
@@ -17,6 +18,10 @@ const router = createBrowserRouter([{
 {
   path: "/schemes",
   element: <Schemes />
+},
+{
+  path: "/edit/:uuid",
+  element: <FormEdit />
 }])
 
 createRoot(document.getElementById("root")!).render(
