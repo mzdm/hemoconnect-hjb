@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
 import csv
 import os
+
+from flask import Flask, request, jsonify
+
 from db import DBHandler  # Now using the iris-based DBHandler
+from server.models.form_schema import FormSchema
 
 app = Flask(__name__)
 
@@ -49,14 +52,21 @@ def query_patient_details(patientId):
         return jsonify({'error': 'Patient not found'}), 404
     return jsonify(patient_details)
 
+@app.route('/api/query/submit-form', methods=['POST'])
+def submit_form():
+    data = request.get_json()
+    try:
+        form = FormSchema(**data)
+        form_schema = form.dict()
+        return jsonify(form_schema), 201
+    except KeyError as e:
+        return jsonify({'error': f'Missing field: {e}'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 @app.route('/api/hello', methods=['GET'])
 def say_hello():
     return 'hello milan'
-
-@app.route("/api/form-submit", methods=["POST"])
-def form_submit():
-    
-    return jsonify(results)
 
 @app.after_request
 def add_headers(response):
