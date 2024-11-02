@@ -166,8 +166,8 @@ export default function DynamicForm() {
                     {v => (
                       <div className="px-2 flex gap-4 items-end">
                         {/* @ts-expect-error idk man mrdam uz */}
-                        <Button onClick={() => setValue(field.title, tIsNumber(v.value) ? parseFloat(v.value) : v.value)}><ArrowBigLeftDash /></Button>
-                        <div className="py-2">"{v.value}" - sebejistota {Math.floor(v.confidence * 100) / 100}%</div>
+                        <Button onClick={() => setValue(field.title, tIsNumber(v.value) ? parseFloat(v.value) : v.value)}><ArrowBigLeftDash /> {v.value}</Button>
+                        <div className="py-2">{Math.floor(v.confidence * 100) / 100}%<sup>*</sup></div>
                         {/* @ts-expect-error idk man mrdam uz */}
                         <Button variant="ghost" onClick={() => resetField(field.title)}><Eraser /></Button>
 
@@ -176,6 +176,7 @@ export default function DynamicForm() {
                   </GetConfidentData>
                   </React.Fragment>
               ))}
+              <div></div><div><sub className="px-4">* - jistota při výčtu z NIS záznamu</sub></div>
               </div>
               <Separator />
               <div className="flex space-x-1">
