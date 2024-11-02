@@ -59,18 +59,18 @@ export function FormFieldComponent({
 
   const { fields: keywords, append: appendKeyword, remove: removeKeyword } = useFieldArray({
     control,
-    // @ts-expect-error dgaf react hook issue
-    name: `formFields.${index}.keywords` as `formFields.${number}.keywords`,
+    name: `formFields.${index}.keywords`,
   })
 
   const { fields: selectValues, append: appendSelectValue, remove: removeSelectValue } = useFieldArray({
     control,
-    // @ts-expect-error dgaf react hook issue
-    name: 'formFields.0.selectValues' as `formFields.${number}.keywords`
+    name: 'formFields.0.selectValues'
   })
 
   const title = useWatch({ control, name: `formFields.${index}.title` });
   const type = useWatch({ control, name: `formFields.${index}.type` });
+
+  console.log(selectValues)
 
   return (
     <AccordionItem value={`formField-${index}`}>
@@ -167,7 +167,7 @@ export function FormFieldComponent({
                   <div key={selectValueIndex} className="flex items-start space-x-2">
                     <FormField
                       control={control}
-                      name={`formFields.${index}.selectValues.${selectValueIndex}`}
+                      name={`formFields.${index}.selectValues.${selectValueIndex}.value`}
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
@@ -220,7 +220,7 @@ export function FormFieldComponent({
               <div key={keywordIndex} className="flex items-start space-x-2">
                 <FormField
                   control={control}
-                  name={`formFields.${index}.keywords.${keywordIndex}`}
+                  name={`formFields.${index}.keywords.${keywordIndex}.value`}
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
