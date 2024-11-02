@@ -71,14 +71,14 @@ services:
     environment:
       - IRIS_PASSWORD=${IRIS_PASSWORD}
       - IRIS_USERNAME=${IRIS_USERNAME}
-      - ISC_DATA_DIRECTORY=/external/dur
+      - ISC_DATA_DIRECTORY=/db-data
     ports:
       - "1972:1972"
       - "52773:52773"
     networks:
       - internal
     volumes:
-      - ./db-data:/external/durr
+      - ./db-data:/db-data
     labels:
       - "traefik.enable=false"
 
