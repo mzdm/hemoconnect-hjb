@@ -80,6 +80,7 @@ export default function DynamicForm() {
     })
 
     const setValue = form.setValue
+    const resetField = form.resetField
 
     // Handle form submission
     function onSubmit(values: z.infer<typeof formSchema>) {
@@ -94,9 +95,14 @@ export default function DynamicForm() {
 
     const myTestData = cutoffUnconfident(parseTestData(testData), 0.5)
 
+    console.log(myTestData)
+
     return (
       <PageLayout>
-        <h2 className="text-2xl font-bold mb-4">{currentForm.formTitle}</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'start'}}>
+          <h2 className="text-2xl font-bold mb-4">{currentForm.formTitle}</h2>
+          <h2 className="text-2xl font-bold mb-4">Nalezené hodnoty</h2>
+        </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr'}}>
@@ -149,7 +155,8 @@ export default function DynamicForm() {
                           (
                             <Input
                               type={field.type === "number" ? "number" : "text"}
-                              {...formField} />
+                              {...formField}
+                              {...(() => { console.log(formField); return {} })()} />
                           )}
                       </FormControl>
                       <FormMessage />
@@ -162,7 +169,7 @@ export default function DynamicForm() {
                         <Button onClick={() => setValue(field.title, tIsNumber(v.value) ? parseFloat(v.value) : v.value)}><ArrowBigLeftDash /></Button>
                         <div className="py-2">"{v.value}" - sebejistota {Math.floor(v.confidence * 100) / 100}%</div>
                         {/* @ts-expect-error idk man mrdam uz */}
-                        <Button variant="ghost" onClick={() => setValue(field.title, undefined)}><Eraser /></Button>
+                        <Button variant="ghost" onClick={() => resetField(field.title)}><Eraser /></Button>
 
                       </div>
                     )}
