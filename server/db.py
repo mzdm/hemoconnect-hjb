@@ -35,9 +35,6 @@ class DBHandler:
                 CREATE TABLE IF NOT EXISTS {FORMS_TABLE} (
                   title VARCHAR(255),
                   field_vector VECTOR(DOUBLE, 3072),
-                  unit VARCHAR(255),
-                  type VARCHAR(255),
-                  keywords VARCHAR(1023),
                   form_id VARCHAR(255)
                 )
             """)

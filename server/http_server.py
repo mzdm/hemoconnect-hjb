@@ -4,11 +4,11 @@ from flask import Flask, request, jsonify
 from openai import OpenAI
 
 from db import DBHandler  # Now using the iris-based DBHandler
-from server.models.form_schema import FormSchema, FormSchemaWithPatientMetadata, PatientMetadata
-from server.parser.clean import ExportedCSV
-from server.parser.openai_parser import process_report, initialize_client
-from server.parser.report_types import KeyValueWithMeta
-from search import create_form_embeddings
+from models.form_schema import FormSchema, FormSchemaWithPatientMetadata, PatientMetadata
+from parser.clean import ExportedCSV
+from parser.openai_parser import process_report, initialize_client
+from parser.report_types import KeyValueWithMeta
+from search import create_form_embeddings, search
 
 app = Flask(__name__)
 
@@ -81,10 +81,17 @@ def submit_form():
         form = request_data.formSchema
         patientMetadata = request_data.patientMetadata
         find_row = find_patient_by_patient_metadata(patientMetadata)
+        create_form_embeddings(db_handler, form.dict(), str(form.uuid))
         parsed_with_metadata: list[KeyValueWithMeta] = process_report(openai_client, find_row, form)
-        create_form_embeddings(db_handler, form_schema, str(form.uuid))
-
-        return 'succ', 201
+        values = []
+        for data in parsed_with_metadata:
+            result = search(db_handler, data.dict(), str(form.uuid))
+            print(result)
+            values.append({
+                "db": result,
+                "data": data.dict()
+            })
+        return jsonify(values), 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400
     except Exception as e:
