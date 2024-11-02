@@ -30,9 +30,17 @@ def process_report(client: OpenAI, content: str, report_index: str):
     # response_dict = completion.choices[0].message.content
     # response_json = json.dumps(response_dict, indent=4)
 
-    with open(f'response-{report_index}.json', 'w') as json_file:
-        json_file.write(completion.choices[0].message.content)
+    # with open(f'response-{report_index}.json', 'w') as json_file:
+    #     json_file.write(completion.choices[0].message.content)
 
-    print("Response saved to response.json")
+    # print("Response saved to response.json")
+
+    parsed = completion.choices[0].message.parsed
+
+    if parsed is None:
+        print("No key-value pairs found.")
+        return
+    
+    print(parsed)
 
     # print(completion.choices[0].message)
