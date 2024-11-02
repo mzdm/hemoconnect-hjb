@@ -9,8 +9,10 @@ regex = re.compile(r"^(?:\d+\.?\d*\s*)(\S+)$", re.DOTALL)
 
 def extract_unit_via_regex(list: list[KeyValue]) -> list[KeyValueWithMeta]:
     def map_to_key_value_with_meta(item: KeyValue) -> KeyValueWithMeta:
+        # if key is "date_time" or "date" or "time" or "datetime" or "date-time" or "datum"
+        is_unit_with_number = item.key not in ["date_time", "date", "time", "datetime", "date-time", "datum"]
         match = regex.search(item.value)
-        if match:
+        if match and is_unit_with_number:
             unit = match.group(1)
             # value_without_unit = re.sub(r"\s*"+unit+r"\s*", "", item.value)
             value_without_unit = re.sub(r"\s*" + re.escape(unit) + r"\s*", "", item.value)
