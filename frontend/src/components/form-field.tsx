@@ -64,13 +64,11 @@ export function FormFieldComponent({
 
   const { fields: selectValues, append: appendSelectValue, remove: removeSelectValue } = useFieldArray({
     control,
-    name: 'formFields.0.selectValues'
+    name: `formFields.${index}.selectValues`
   })
 
   const title = useWatch({ control, name: `formFields.${index}.title` });
   const type = useWatch({ control, name: `formFields.${index}.type` });
-
-  console.log(selectValues)
 
   return (
     <AccordionItem value={`formField-${index}`}>
@@ -158,13 +156,14 @@ export function FormFieldComponent({
                   type="button"
                   variant="outline"
                   size="sm"
-                  // @ts-expect-error dhaf
-                  onClick={() => appendSelectValue("")}
+                  onClick={() => appendSelectValue({
+                    value: ""
+                  })}
                 >
                   <Plus className="h-4 w-4 mr-2" /> Přidat hodnotu
                 </Button>
-                {selectValues.map((_, selectValueIndex) => (
-                  <div key={selectValueIndex} className="flex items-start space-x-2">
+                {selectValues.map((select, selectValueIndex) => (
+                  <div key={select.id} className="flex items-start space-x-2">
                     <FormField
                       control={control}
                       name={`formFields.${index}.selectValues.${selectValueIndex}.value`}
@@ -210,14 +209,15 @@ export function FormFieldComponent({
                 type="button"
                 variant="outline"
                 size="sm"
-                // @ts-expect-error dhaf
-                onClick={() => appendKeyword("")}
+                onClick={() => appendKeyword({
+                  value: ""
+                })}
               >
                 <Plus className="h-4 w-4 mr-2" /> Přidat klíčové slovo
               </Button>
             </div>
-            {keywords.map((_, keywordIndex) => (
-              <div key={keywordIndex} className="flex items-start space-x-2">
+            {keywords.map((keyword, keywordIndex) => (
+              <div key={keyword.id} className="flex items-start space-x-2">
                 <FormField
                   control={control}
                   name={`formFields.${index}.keywords.${keywordIndex}.value`}
