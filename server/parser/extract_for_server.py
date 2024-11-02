@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 load_dotenv()
 LAB_FILE_PATH = getenv('AMB_CLEANED_FILE_PATH')
 
-OUT_FILE_PATH_ID_PACS = '../server/data/id_pacs.csv'
-OUT_FILE_PATH_PATIENT_AMB = '../server/data/patient_amb.csv'
+OUT_FILE_PATH_ID_PACS = '../data/id_pacs.csv'
+OUT_FILE_PATH_PATIENT_AMB = '../data/patient_amb.csv'
 
 def extract_id_pacs_columns_values():
     with open(LAB_FILE_PATH, mode='r', encoding='windows-1250') as file:
