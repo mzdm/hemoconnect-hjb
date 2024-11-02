@@ -5,7 +5,7 @@ class KeyValue(BaseModel):
     key: str
     value: str
 
-class KeyValueWithMeta():
+class KeyValueWithMeta(BaseModel):
     original_tag: str
     key: str
     value: str
@@ -14,7 +14,7 @@ class KeyValueWithMeta():
     has_unit: bool
     unit: str
 
-class ReportWithMeta():
+class ReportWithMeta(BaseModel):
     values: list[KeyValueWithMeta]
 
     patient_id: str

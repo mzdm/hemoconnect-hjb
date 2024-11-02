@@ -3,6 +3,8 @@ import json
 from openai import OpenAI
 from dotenv import load_dotenv
 from os import getenv
+
+from unit_extract import extract_unit_via_regex
 from report_types import Response
 
 load_dotenv()
@@ -35,12 +37,16 @@ def process_report(client: OpenAI, content: str, report_index: str):
 
     # print("Response saved to response.json")
 
-    parsed = completion.choices[0].message.parsed
+    parsed: Response = completion.choices[0].message.parsed
 
     if parsed is None:
         print("No key-value pairs found.")
         return
     
-    print(parsed)
+    # print(parsed)
 
-    # print(completion.choices[0].message)
+    parsed_with_metadata = extract_unit_via_regex(parsed.values)
+    updated_values_dicts = [item.dict() for item in parsed_with_metadata]
+    with open(f'response-{report_index}.json', 'w') as json_file:
+        json_file.write(json.dumps(updated_values_dicts, indent=4))
+    # print(parsed_with_metadata)

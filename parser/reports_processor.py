@@ -13,7 +13,7 @@ print(FILE_PATH)
 def process_reports():
     client = initialize_client()
     for row in iterate_latest_column(FILE_PATH):
-        print(row)
+        # print(row)
         response_index = f'{row[0]}-{row[1]}-{row[3]}-{row[4]}'
         report_text = row[-1]
 

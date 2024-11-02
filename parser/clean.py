@@ -52,7 +52,7 @@ def iterate_latest_column(file_path) -> ExportedCSV:
 
         rows = list(reader)
 
-        print(rows)
+        # print(rows)
 
         return ExportedCSV(rows)
         # for row in reader:
