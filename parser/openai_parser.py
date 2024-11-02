@@ -1,3 +1,5 @@
+import json
+
 from openai import OpenAI
 from dotenv import load_dotenv
 from os import getenv
@@ -21,5 +23,13 @@ completion = client.beta.chat.completions.parse(
     ],
     response_format=Response
 )
+
+response_dict = completion.choices[0].message.dict()
+response_json = json.dumps(response_dict, indent=4)
+
+with open('response.json', 'w') as json_file:
+    json_file.write(response_json)
+
+print("Response saved to response.json")
 
 print(completion.choices[0].message)

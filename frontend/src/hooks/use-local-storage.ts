@@ -1,11 +1,22 @@
 import { useState } from "react";
+import { z } from "zod";
 
 export function useLocalStorage<T>(
   key: string,
-  initialValue: T
+  initialValue: T,
+  schema?: z.ZodType<T>
 ): [T, (value: T) => void] {
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
+  const validateData = (data: unknown): T => {
+    if (!schema) return data as T;
+    try {
+      return schema.parse(data);
+    } catch (error) {
+      console.error(error);
+
+      throw new Error(`Nepodařilo se zvalidovat data: ${error}`);
+    }
+  };
+
   const [storedValue, setStoredValue] = useState<T>(() => {
     if (typeof window === "undefined") {
       return initialValue;
@@ -13,25 +24,26 @@ export function useLocalStorage<T>(
 
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
+      const parsedItem = item ? JSON.parse(item) : initialValue;
+      return validateData(parsedItem);
     } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
+      console.error(error);
+
+      throw new Error(`Chyba při načítání dat"${key}":${error}`);
     }
   });
 
-  // Return a wrapped version of useState's setter function that persists the new value to localStorage
   const setValue = (value: T) => {
+    console.log("setValue", value);
     try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      setStoredValue(valueToStore);
+      const validatedValue = validateData(value);
+      setStoredValue(validatedValue);
       if (typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        window.localStorage.setItem(key, JSON.stringify(validatedValue));
       }
     } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error);
+      console.error(error);
+      throw new Error(`Chyba při ukládání "${key}":${error}`);
     }
   };
 

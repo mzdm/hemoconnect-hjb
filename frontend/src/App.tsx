@@ -1,7 +1,5 @@
 import { useState } from "react";
-import EnhancedSearchForm, {
-  FormSchema,
-} from "./components/enhanced-search-form";
+import EnhancedSearchForm from "./components/enhanced-search-form";
 import {
   Card,
   CardHeader,
@@ -9,6 +7,7 @@ import {
   CardDescription,
 } from "./components/ui/card";
 import FormSelect from "@/components/form-select";
+import { FormSchema } from "./hooks/form-schema";
 
 const isValidIndex = (index: number | undefined | null): index is number =>
   Number.isInteger(index) && typeof index === "number" && index >= 0;
@@ -18,8 +17,8 @@ function App() {
   const [selectedIndex, setSelectIndex] = useState<number>();
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <Card className="w-full max-w-3xl mx-auto p-4">
+    <div className="flex justify-center items-center min-h-screen p-8">
+      <Card className="w-full max-w-3xl mx-auto p-4 ">
         {selectedForm && (
           <button
             onClick={() => setSelectForm(undefined)}

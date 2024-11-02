@@ -69,5 +69,5 @@ output_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IH
 # merge_last_two_columns(input_file_path, output_file_path)
 # transformed_df = transform_csv(output_file_path, output_file_path3)
 
-# iterate_latest_column(output_file_path)
+iterate_latest_column(output_file_path)
 

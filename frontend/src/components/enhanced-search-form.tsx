@@ -1,12 +1,10 @@
-"use client";
-
 import { Save, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CardContent, CardFooter } from "@/components/ui/card";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import {
   Form,
   FormControl,
@@ -16,27 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { FormFieldComponent } from "./form-field";
-import { useLocalStorage } from "@/hooks/use-local-storage";
+
 import { useToast } from "@/hooks/use-toast";
-
-// Move these type definitions to a separate types file if needed
-const formFieldSchema = z.object({
-  title: z.string().min(1, "Název pole je povinný"),
-  unit: z.string().optional(),
-  type: z.enum(["numeric", "text", "date", "boolean"], {
-    required_error: "Typ pole je povinný",
-  }),
-  keywords: z
-    .array(z.string().min(1, "Klíčové slovo nesmí být prázdné"))
-    .min(1, "Přidejte alespoň jedno klíčové slovo"),
-});
-
-const formSchema = z.object({
-  formTitle: z.string().min(1, "Název formuláře je povinný"),
-  formFields: z.array(formFieldSchema).min(1, "Přidejte alespoň jedno pole"),
-});
-
-export type FormSchema = z.infer<typeof formSchema>;
+import { FormSchema, formSchema } from "@/hooks/form-schema";
+import { useSavedForms } from "@/hooks/use-saved-forms";
+import { Accordion } from "./ui/accordion";
 
 export default function Component({
   initialFormState,
@@ -60,12 +42,10 @@ export default function Component({
     control,
     name: "formFields",
   });
-  const [savedForms, setSavedForms] = useLocalStorage<FormSchema[]>(
-    "saved-forms",
-    []
-  );
+  const [savedForms, setSavedForms] = useSavedForms();
   const onSubmit = (data: FormSchema) => {
     const newForms = structuredClone(savedForms);
+    console.log(newForms, index);
     newForms[index] = data;
     setSavedForms(newForms);
     toast({
@@ -128,19 +108,21 @@ export default function Component({
               </FormItem>
             )}
           />
-          {fields.map((field, index) => (
-            <FormFieldComponent
-              key={field.id}
-              control={control}
-              index={index}
-              onRemove={() => remove(index)}
-            />
-          ))}
+          <Accordion type="single" collapsible>
+            {fields.map((field, index) => (
+              <FormFieldComponent
+                key={field.id}
+                control={control}
+                index={index}
+                onRemove={() => remove(index)}
+              />
+            ))}
+          </Accordion>
           <Button
             type="button"
             variant="outline"
             onClick={() =>
-              append({ title: "", unit: "", type: "text", keywords: [""] })
+              append({ title: "", unit: "", type: "numeric", keywords: [""] })
             }
           >
             <Plus className="h-4 w-4 mr-2" /> Přidat pole
