@@ -4,7 +4,7 @@ import { z } from "zod";
 export const formFieldSchema = z.object({
   title: z.string().min(1, "Název pole je povinný"),
   unit: z.string().optional(),
-  type: z.enum(["numeric", "text", "date"], {
+  type: z.enum(["number", "string", "date"], {
     required_error: "Typ pole je povinný",
   }),
   keywords: z

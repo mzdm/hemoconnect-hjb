@@ -1,4 +1,4 @@
-import { Control, useFieldArray } from "react-hook-form";
+import { Control, useFieldArray, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -39,12 +39,15 @@ export function FormFieldComponent({
     append: appendKeyword,
     remove: removeKeyword,
   } = useFieldArray({
-    name: `formFields.${index}.keywords` as "formFields.0.keywords",
+    control,
+    name: "formFields",
   });
+
+  const title = useWatch({ control, name: `formFields.${index}.title` });
 
   return (
     <AccordionItem value={`formField-${index}`}>
-      <AccordionTrigger>Pole {index + 1}</AccordionTrigger>
+      <AccordionTrigger>{title}</AccordionTrigger>
       <AccordionContent>
         <div className="space-y-4 p-4 border rounded-lg">
           <div className="flex items-center justify-between gap-4">
@@ -111,8 +114,8 @@ export function FormFieldComponent({
                           <SelectValue placeholder="Vyberte typ" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="numeric">Číselný</SelectItem>
-                          <SelectItem value="text">Textový</SelectItem>
+                          <SelectItem value="number">Číslo</SelectItem>
+                          <SelectItem value="string">Text</SelectItem>
                           <SelectItem value="date">Datum</SelectItem>
                         </SelectContent>
                       </Select>
@@ -138,7 +141,7 @@ export function FormFieldComponent({
                 type="button"
                 variant="outline"
                 size="sm"
-                onClick={() => appendKeyword("")}
+                onClick={() => appendKeyword({ title: "", type: "string", keywords: [] })}
               >
                 <Plus className="h-4 w-4 mr-2" /> Přidat klíčové slovo
               </Button>

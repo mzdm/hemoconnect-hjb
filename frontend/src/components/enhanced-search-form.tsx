@@ -34,8 +34,8 @@ export default function Component({
   const {
     control,
     handleSubmit,
-    formState: { errors },
-  } = form;
+    formState: { errors }
+    } = form;
   const { toast } = useToast();
 
   const { fields, append, remove } = useFieldArray({
@@ -122,7 +122,7 @@ export default function Component({
             type="button"
             variant="outline"
             onClick={() =>
-              append({ title: "", unit: "", type: "numeric", keywords: [""] })
+              append({ title: "", unit: "", type: "string", keywords: [""] })
             }
           >
             <Plus className="h-4 w-4 mr-2" /> Přidat pole
