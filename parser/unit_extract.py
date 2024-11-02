@@ -2,8 +2,6 @@ import json
 import re
 from datetime import datetime
 
-from quantulum3 import parser
-
 from report_types import KeyValue, Response, KeyValueWithMeta
 
 regex = re.compile(r"^(?:\d+\.?\d*\s*)(\S+)$", re.DOTALL)
@@ -71,10 +69,10 @@ def extract_units_via_quant(data):
         new_values.append(item)
     return new_values
 
-with open("response.json", "r") as file:
-    data = json.load(file)
-    data_dict = data["parsed"]
-    response = Response(**data_dict)
+# with open("response.json", "r") as file:
+#     data = json.load(file)
+#     data_dict = data["parsed"]
+#     response = Response(**data_dict)
 
 # updated_values = extract_units_via_quant(response)
 # updated_values = extract_unit_via_regex(response.values)
