@@ -18,7 +18,7 @@ def load_id_pacs_data():
 def query_patient_ids():
     data = request.get_json()
     query_string = data.get('patientId', '')
-    patient_ids = [row['ic_pac'] for row in id_pacs_data if query_string in row['ic_pac']]
+    patient_ids = [row['ic_pac'] for row in id_pacs_data if row['ic_pac'].startswith(query_string)]
     return jsonify(patient_ids)
 
 @app.route('/api/hello', methods=['GET'])
