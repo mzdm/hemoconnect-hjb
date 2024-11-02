@@ -28,7 +28,7 @@ function App() {
     queryKey: ["autocomplete"],
     initialData: [],
     queryFn: async (): Promise<string[]> => {
-      const data = await fetch(`https://api.hjb.mesh.sk/api/query/query`, {
+      const data = await fetch(`${import.meta.env.VITE_API_URL}/query`, {
         headers: {
           "Content-Type": "application/json",
         },

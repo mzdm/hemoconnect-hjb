@@ -39,7 +39,7 @@ export const ViewPatient = () => {
     initialData: [],
     queryFn: async (): Promise<PatientReports[]> => {
       const data = await fetch(
-        `https://api.hjb.mesh.sk/api/query/${patientId}`,
+        `${import.meta.env.VITE_API_URL}/query/${patientId}`,
         {
           headers: {
             "Content-Type": "application/json",
