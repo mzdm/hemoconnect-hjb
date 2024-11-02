@@ -78,7 +78,7 @@ services:
     networks:
       - internal
     volumes:
-      - ./iris-data:/external/dur
+      - ./db-data:/external/durr
     labels:
       - "traefik.enable=false"
 
