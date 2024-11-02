@@ -29,4 +29,4 @@ ENV FLASK_ENV=production
 EXPOSE 8000
 
 # Start Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "http_server:app"]
+CMD ["python", "http_server.py"]
