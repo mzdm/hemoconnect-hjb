@@ -16,15 +16,87 @@ def initialize_client() -> OpenAI:
 
 def process_report(client: OpenAI, content: str, report_index: str) -> list[KeyValueWithMeta]:
 
+
+
+    fields = { "formTitle": "Diagnostický formulář", "formFields": [
+        { "title": "Datum hodnocení", "unit": "", "type": "date", "keywords": ["Datum hodnocení"] },
+        { "title": "Váha", "unit": "kg", "type": "numeric", "keywords": ["váha", "hmotnost", "váha (kg)", "hmotnost (kg)"] },
+        { "title": "Výška", "unit": "cm", "type": "numeric", "keywords": ["výška", "výška (cm)"] },
+        { "title": "Po linii léčby", "unit": "", "type": "numeric", "keywords": ["v ____ linii", "linii léčby", "x. linie"] },
+        { "title": "Klinické stádium (Rai)", "unit": "", "type": "text", "keywords": ["Rai", "klinické stádium", "klin. stad."] }
+      ]
+    }
+
+
     completion = client.beta.chat.completions.parse(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[
-            {"role": "system", "content": "You are a medical nurse reading patient's reports in czech language."},
-            {"role": "system", "content": "You are supposed to export key-value pairs from the given text and store their original tag."},
-            {
-                "role": "user",
-                "content": content
-            }
+            {"role": "system",
+            "content": 
+              """You are a specialized medical data extraction system designed to process Czech medical records. Your role is to extract specific medical data points defined in a search guidance JSON, but only when they are clearly and unambiguously present in the text.
+                INPUT:
+                1. You will receive:
+                  - Unstructured medical text
+                  - A JSON guidance document that specifies:
+                    * formFields: Array of fields to search for, each containing:
+                      - title: The field name to use in output
+                      - keywords: Array of search terms that might indicate the presence of this data
+                      - type: Expected data type (date, numeric, text)
+                      - unit: Unit reference (for context only)
+
+                CORE EXTRACTION RULES:
+                1. Use the keywords as search hints, but also consider common medical notation and context
+                2. Only extract values that are explicitly present and unambiguous
+                3. When multiple values exist for the same field, use the most recent one
+                4. Preserve exact numerical precision as written
+                5. Convert all dates to DDMMYYYY format
+
+                OUTPUT FORMAT:
+                Return only a list of KeyValue objects for successfully found fields:
+                ```json
+                {
+                  "values": [
+                    {
+                      "original_tag": "[exact title from form]",
+                      "key": "[standardized key name]",
+                      "value": "[extracted value]"
+                    }
+                  ]
+                }
+                ```
+
+                CRITICAL CONSTRAINTS:
+                1. It is NOT necessary to find values for all fields in the guidance JSON
+                2. Never infer or hallucinate values - if there's any ambiguity, omit the field entirely
+                3. Only include values that are found with 100% confidence
+                4. Maintain original precision for numeric values
+                5. Do not attempt to standardize or clean text encoding
+                6. Do not perform unit conversions
+
+                For numeric values:
+                - Extract only explicit measurements
+                - Preserve exact precision as written
+                - Do not include units in the value
+
+                For dates:
+                - Only include complete, explicit dates
+                - Convert to DDMMYYYY format
+                - Exclude partial or ambiguous dates
+
+                For text values:
+                - Extract only exact matches or clear equivalents
+                - Do not attempt to interpret or categorize unclear terms
+                - Exclude ambiguous or partial matches
+               """
+              },
+              {
+                  "role": "user",
+                  "content": f"Hello helpful AI system, I am the doctor and these are the fields I would like to look for in JSON format: {json.dumps(fields)}"
+              },
+              {
+                  "role": "user",
+                  "content": content
+              }
         ],
         response_format=Response
     )
