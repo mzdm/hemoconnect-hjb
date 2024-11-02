@@ -46,9 +46,10 @@ def preload_data():
 
 def find_patient_by_patient_metadata(patient_metadata: PatientMetadata):
     for row in amb_cleaned_data:
-        if row['ic_pac'].strip() == patient_metadata.ic_pac:
-                if row['i_dg_kod'].strip() == patient_metadata.i_dg_kod:
-                    return row[list(row.keys())[-1]] # return the last column
+        if row['ic_amb_zad'].strip() == patient_metadata.ic_amb_zad:
+            if row['ic_pac'].strip() == patient_metadata.ic_pac:
+                    if row['i_dg_kod'].strip() == patient_metadata.i_dg_kod:
+                        return row[list(row.keys())[-1]] # return the last column
     return None
 
 @app.route('/api/query', methods=['POST'])

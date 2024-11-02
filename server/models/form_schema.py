@@ -23,6 +23,7 @@ class FormSchema(BaseModel):
 
 class PatientMetadata(BaseModel):
     ic_pac: str = Field()
+    ic_amb_zad: str = Field()
     i_dg_kod: str = Field()
 
 class FormSchemaWithPatientMetadata(BaseModel):
