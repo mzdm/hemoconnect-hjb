@@ -1,10 +1,9 @@
 import csv
 import os
-
 from flask import Flask, request, jsonify
-
 from db import DBHandler  # Now using the iris-based DBHandler
-from server.models.form_schema import FormSchema
+from models.form_schema import FormSchema
+from search import create_form_embeddings
 
 app = Flask(__name__)
 
@@ -14,6 +13,7 @@ PATIENT_AMB_CSV_PATH = 'data/patient_amb.csv'
 id_pacs_data = []
 patient_amb_data = []
 db_handler = DBHandler()
+db_handler.connect()
 
 def preload_data():
     global id_pacs_data
@@ -58,6 +58,8 @@ def submit_form():
     try:
         form = FormSchema(**data)
         form_schema = form.dict()
+        create_form_embeddings(db_handler, form_schema, str(form.uuid))
+
         return jsonify(form_schema), 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400
