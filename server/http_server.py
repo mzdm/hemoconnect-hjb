@@ -29,10 +29,10 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_header('Content-type', 'text/plain')
             self.end_headers()
             self.wfile.write(b'hello milan')
-        elif self.path == '/api/queryPatientId':
+        elif self.path == '/api/query':
             content_length = int(self.headers['Content-Length'])
             post_data = self.rfile.read(content_length)
-            query_string = json.loads(post_data.decode('utf-8')).get('query', '')
+            query_string = json.loads(post_data.decode('utf-8')).get('patientId', '')
 
             # Implement your search logic here
             patient_ids = self.search_patient_ids(query_string)
