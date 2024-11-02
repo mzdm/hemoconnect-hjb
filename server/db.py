@@ -10,10 +10,10 @@ class DBHandler:
 
     def connect(self):
         try:
-            username = 'hackjakbrno'
-            password = 'heslohovnokleslo'
-            hostname = os.getenv('IRIS_HOSTNAME', 'localhost')
-            port = '1972' 
+            hostname = os.getenv('IRIS_HOST', 'localhost')
+            port = os.getenv('IRIS_PORT', '1972')
+            username = os.getenv('IRIS_USERNAME', 'hackjakbrno')
+            password = os.getenv('IRIS_PASSWORD', 'heslohovnokleslo')
             namespace = 'USER'
             CONNECTION_STRING = f"{hostname}:{port}/{namespace}"
             self.conn = iris.connect(CONNECTION_STRING, username, password)

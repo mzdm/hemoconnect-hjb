@@ -9,6 +9,10 @@ from parser.clean import ExportedCSV
 from parser.openai_parser import process_report, initialize_client
 from parser.report_types import KeyValueWithMeta
 from search import create_form_embeddings, search
+import time
+
+time.sleep(30)
+
 
 app = Flask(__name__)
 

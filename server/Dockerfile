@@ -1,5 +1,5 @@
-# Use python slim image as base
-FROM python:3.11-slim
+# Use python slim image as base for x86 architecture
+FROM --platform=linux/amd64 python:3.11-slim
 
 # Set working directory
 WORKDIR /app
@@ -11,10 +11,10 @@ RUN apt-get update && apt-get install -y \
 
 # Copy requirements first to leverage Docker cache
 COPY requirements.txt .
-
+COPY install install
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install ./install/intersystems_irispython-5.0.1-8026-cp38.cp39.cp310.cp311.cp312-cp38.cp39.cp310.cp311.cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
 # Copy the rest of the application
 COPY . .
 
