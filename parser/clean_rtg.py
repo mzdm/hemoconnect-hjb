@@ -6,7 +6,7 @@ from os import getenv
 from clean import detect_encoding
 
 load_dotenv()
-RTG_FILE_PATH = getenv('RTG_FILE_PATH')
+RTG_FILE_PATH = getenv('RTG_UNCLEANED_FILE_PATH')
 
 def clean_rtg_csv():
     # detect_encoding(RTG_FILE_PATH)

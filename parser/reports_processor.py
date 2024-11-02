@@ -5,7 +5,7 @@ from openai_parser import initialize_client, process_report
 
 load_dotenv()
 
-FILE_PATH=getenv('FILE_PATH')
+FILE_PATH=getenv('AMB_CLEANED_FILE_PATH')
 
 
 print(FILE_PATH)
