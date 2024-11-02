@@ -50,6 +50,7 @@ services:
       - "traefik.http.routers.backend.rule=Host(`api.${BASE_DOMAIN}`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.services.backend.loadbalancer.server.port=8000"
 
   frontend:
     build:
