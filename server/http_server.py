@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 import csv
 import os
+from db import DBHandler  # Now using the iris-based DBHandler
 
 app = Flask(__name__)
 
@@ -9,6 +10,7 @@ ID_PACS_CSV_PATH = 'data/id_pacs.csv'
 PATIENT_AMB_CSV_PATH = 'data/patient_amb.csv'
 id_pacs_data = []
 patient_amb_data = []
+db_handler = DBHandler()
 
 def preload_data():
     global id_pacs_data
@@ -20,6 +22,10 @@ def preload_data():
     with open(PATIENT_AMB_CSV_PATH, mode='r', encoding='windows-1250') as file:
         reader = csv.DictReader(file, delimiter=';')
         patient_amb_data = [row for row in reader]
+
+    # Initialize database connection and run migrations
+    db_handler.connect()
+    db_handler.migrate()
 
 @app.route('/api/query', methods=['POST'])
 def query_patient_ids():
@@ -47,6 +53,11 @@ def query_patient_details(patientId):
 def say_hello():
     return 'hello milan'
 
+@app.route("/api/form-submit", methods=["POST"])
+def form_submit():
+    
+    return jsonify(results)
+
 @app.after_request
 def add_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -56,5 +67,8 @@ def add_headers(response):
 
 if __name__ == '__main__':
     os.chdir(os.curdir)  # or set to your specific path
-    preload_data()
-    app.run(port=PORT, debug=True)
+    try:
+        preload_data()
+        app.run(port=PORT, debug=True)
+    finally:
+        db_handler.close()
