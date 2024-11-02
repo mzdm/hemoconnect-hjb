@@ -16,7 +16,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Minus } from "lucide-react";
-import { FormSchema } from "./enhanced-search-form"; // You'll need to move the type definition
+import { FormSchema } from "@/hooks/form-schema";
+import {
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 interface FormFieldComponentProps {
   control: Control<FormSchema>;
@@ -38,131 +43,140 @@ export function FormFieldComponent({
   });
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg">
-      <div className="flex items-center justify-between gap-4">
-        <FormField
-          control={control}
-          name={`formFields.${index}.title`}
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel>Název pole</FormLabel>
-              <FormControl>
-                <Input placeholder="Zadejte název pole" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {index > 0 && (
-          <FormItem>
-            <FormLabel className="opacity-0 select-none">test</FormLabel>
-
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              onClick={onRemove}
-            >
-              <Minus className="h-4 w-4 mr-2" /> Odebrat pole
-            </Button>
-          </FormItem>
-        )}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <FormField
-            control={control}
-            name={`formFields.${index}.unit`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Očekávaná jednotka</FormLabel>
-                <FormControl>
-                  <Input placeholder="např. mg/dL, mmHg" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <div className="space-y-2">
-          <FormField
-            control={control}
-            name={`formFields.${index}.type`}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Typ pole</FormLabel>
-                <FormControl>
-                  <Select {...field}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Vyberte typ" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="numeric">Číselný</SelectItem>
-                      <SelectItem value="text">Textový</SelectItem>
-                      <SelectItem value="date">Datum</SelectItem>
-                      <SelectItem value="boolean">Boolean</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <FormLabel>
-            Klíčová slova{" "}
-            {keywords.length === 0 && (
-              <div className="text-xs text-gray-600">
-                Přidejte alespoň jedno klíčové slovo
-              </div>
-            )}
-          </FormLabel>
-
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => appendKeyword("")}
-          >
-            <Plus className="h-4 w-4 mr-2" /> Přidat klíčové slovo
-          </Button>
-        </div>
-        {keywords.map((keyword, keywordIndex) => (
-          <div key={keywordIndex} className="flex items-center space-x-2">
+    <AccordionItem value={`formField-${index}`}>
+      <AccordionTrigger>Pole {index + 1}</AccordionTrigger>
+      <AccordionContent>
+        <div className="space-y-4 p-4 border rounded-lg">
+          <div className="flex items-center justify-between gap-4">
             <FormField
               control={control}
-              name={`formFields.${index}.keywords.${keywordIndex}`}
+              name={`formFields.${index}.title`}
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-full">
+                  <FormLabel>Název pole</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder={`Klíčové slovo ${keywordIndex + 1}`}
-                      {...field}
-                      className="flex-grow"
-                    />
+                    <Input placeholder="Zadejte název pole" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {keywordIndex > 0 && (
+            {index > 0 && (
+              <FormItem>
+                <FormLabel className="opacity-0 select-none">test</FormLabel>
+
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  onClick={onRemove}
+                >
+                  <Minus className="h-4 w-4 mr-2" /> Odebrat pole
+                </Button>
+              </FormItem>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <FormField
+                control={control}
+                name={`formFields.${index}.unit`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Očekávaná jednotka</FormLabel>
+                    <FormControl>
+                      <Input placeholder="např. mg/dL, mmHg" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="space-y-2">
+              <FormField
+                control={control}
+                name={`formFields.${index}.type`}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Typ pole</FormLabel>
+                    <FormControl>
+                      <Select
+                        {...field}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        name={field.name}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Vyberte typ" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="numeric">Číselný</SelectItem>
+                          <SelectItem value="text">Textový</SelectItem>
+                          <SelectItem value="date">Datum</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <FormLabel>
+                Klíčová slova{" "}
+                {keywords.length === 0 && (
+                  <div className="text-xs text-gray-600">
+                    Přidejte alespoň jedno klíčové slovo
+                  </div>
+                )}
+              </FormLabel>
+
               <Button
                 type="button"
                 variant="outline"
-                size="icon"
-                onClick={() => removeKeyword(keywordIndex)}
+                size="sm"
+                onClick={() => appendKeyword("")}
               >
-                <Minus className="h-4 w-4" />
-                <span className="sr-only">Odebrat klíčové slovo</span>
+                <Plus className="h-4 w-4 mr-2" /> Přidat klíčové slovo
               </Button>
-            )}
+            </div>
+            {keywords.map((keyword, keywordIndex) => (
+              <div key={keywordIndex} className="flex items-center space-x-2">
+                <FormField
+                  control={control}
+                  name={`formFields.${index}.keywords.${keywordIndex}`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder={`Klíčové slovo ${keywordIndex + 1}`}
+                          {...field}
+                          className="flex-grow"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {keywordIndex > 0 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => removeKeyword(keywordIndex)}
+                  >
+                    <Minus className="h-4 w-4" />
+                    <span className="sr-only">Odebrat klíčové slovo</span>
+                  </Button>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
   );
 }
