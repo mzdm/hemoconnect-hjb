@@ -27,7 +27,7 @@ const groupByDiagnosisCode = (reports: PatientReports[]) => {
 export const ViewPatient = () => {
     const { patientId } = useParams()
 
-    const { data } = useQuery({
+    const { data, status } = useQuery({
         queryKey: ['autocomplete'],
         initialData: [],
         queryFn: async (): Promise<PatientReports[]> => {
@@ -45,6 +45,10 @@ export const ViewPatient = () => {
       })
 
       const groupedData = React.useMemo(() => groupByDiagnosisCode(data), [data])
+
+    if (status === "error") {
+        return <div>Pacient nenalezen</div>
+    }
 
     return (
         <PageLayout>
