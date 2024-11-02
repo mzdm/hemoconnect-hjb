@@ -14,7 +14,7 @@ def clean_rtg_csv():
     try:
         with open(RTG_FILE_PATH, mode='r', encoding='windows-1250') as file:
             reader = csv.DictReader(file, delimiter=';')
-            headers = reader.fieldnames
+            headers = reader.fieldnames + ['rtg_record_id']
             print(headers)
 
             merged_rows = []
@@ -26,7 +26,10 @@ def clean_rtg_csv():
                 if row['ic_pac']:
                     if current_row:
                         merged_rows.append(current_row)
+                    rtg_record_id = row[headers[0]]
+                    row[headers[0]] = ''
                     current_row = row
+                    row['rtg_record_id'] = rtg_record_id
                 else:
                     for key, value in row.items():
                         if value:
