@@ -1,3 +1,4 @@
+from numpy import integer
 from pydantic import BaseModel, Field, UUID4
 from typing import List, Optional
 
@@ -15,7 +16,15 @@ class FormField(BaseModel):
     keywords: List[Keyword]
 
 class FormSchema(BaseModel):
-    uuid: UUID4 = Field()
+    uuid: str = Field()
     formTitle: str = Field()
     formFields: List[FormField]
     formCode: str = Field()
+
+class PatientMetadata(BaseModel):
+    ic_pac: str = Field()
+    i_dg_kod: str = Field()
+
+class FormSchemaWithPatientMetadata(BaseModel):
+    formSchema: FormSchema = Field()
+    patientMetadata: PatientMetadata = Field()

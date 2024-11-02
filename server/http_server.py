@@ -2,22 +2,31 @@ import csv
 import os
 
 from flask import Flask, request, jsonify
+from openai import OpenAI
 
 from db import DBHandler  # Now using the iris-based DBHandler
-from server.models.form_schema import FormSchema
+from server.models.form_schema import FormSchema, FormSchemaWithPatientMetadata, PatientMetadata
+from server.parser.clean import ExportedCSV
+from server.parser.openai_parser import process_report, initialize_client
+from server.parser.report_types import KeyValueWithMeta
 
 app = Flask(__name__)
 
 PORT = 8000
 ID_PACS_CSV_PATH = 'data/id_pacs.csv'
 PATIENT_AMB_CSV_PATH = 'data/patient_amb.csv'
+AMB_CLEANED_FILE_PATH = 'data/amb_cleaned.csv'
 id_pacs_data = []
 patient_amb_data = []
+amb_cleaned_data: ExportedCSV
 db_handler = DBHandler()
+
+openai_client: OpenAI = None
 
 def preload_data():
     global id_pacs_data
     global patient_amb_data
+    global amb_cleaned_data
     with open(ID_PACS_CSV_PATH, mode='r', encoding='windows-1250') as file:
         reader = csv.DictReader(file, delimiter=';')
         id_pacs_data = [row for row in reader]
@@ -26,9 +35,20 @@ def preload_data():
         reader = csv.DictReader(file, delimiter=';')
         patient_amb_data = [row for row in reader]
 
+    with open(AMB_CLEANED_FILE_PATH, mode='r', encoding='windows-1250') as file:
+        reader = csv.DictReader(file, delimiter=';')
+        amb_cleaned_data = ExportedCSV(list(reader), reader.fieldnames)
+
     # Initialize database connection and run migrations
     db_handler.connect()
     db_handler.migrate()
+
+def find_patient_by_patient_metadata(patient_metadata: PatientMetadata):
+    for row in amb_cleaned_data:
+        if row['ic_pac'].strip() == patient_metadata.ic_pac:
+                if row['i_dg_kod'].strip() == patient_metadata.i_dg_kod:
+                    return row[list(row.keys())[-1]] # return the last column
+    return None
 
 @app.route('/api/query', methods=['POST'])
 def query_patient_ids():
@@ -56,9 +76,12 @@ def query_patient_details(patientId):
 def submit_form():
     data = request.get_json()
     try:
-        form = FormSchema(**data)
-        form_schema = form.dict()
-        return jsonify(form_schema), 201
+        request_data = FormSchemaWithPatientMetadata(**data)
+        form = request_data.formSchema
+        patientMetadata = request_data.patientMetadata
+        find_row = find_patient_by_patient_metadata(patientMetadata)
+        parsed_with_metadata: list[KeyValueWithMeta] = process_report(openai_client, find_row, form)
+        return 'succ', 201
     except KeyError as e:
         return jsonify({'error': f'Missing field: {e}'}), 400
     except Exception as e:
@@ -78,6 +101,7 @@ def add_headers(response):
 if __name__ == '__main__':
     os.chdir(os.curdir)  # or set to your specific path
     try:
+        openai_client = initialize_client()
         preload_data()
         app.run(port=PORT, debug=True)
     finally:

@@ -1,8 +1,9 @@
 import json
+import parser
 import re
 from datetime import datetime
 
-from report_types import KeyValue, Response, KeyValueWithMeta
+from server.parser.report_types import KeyValue, KeyValueWithMeta
 
 regex = re.compile(r"^(?:\d+\.?\d*\s*)(\S+)$", re.DOTALL)
 
