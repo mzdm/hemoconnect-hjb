@@ -1,4 +1,4 @@
-import { SquareArrowOutUpRight, User } from "lucide-react";
+import { Search, SlidersHorizontal, SquareArrowOutUpRight, User } from "lucide-react";
 import React, { KeyboardEvent } from "react";
 import { PageLayout } from "./components/page-layout";
 import { Button } from "./components/ui/button";
@@ -40,41 +40,57 @@ function App() {
   return (
     <PageLayout>
       <h3 className="text-lg">Pacienti</h3>
-      <Input placeholder="Začněte psát IC pacienta" onKeyDown={(e: KeyboardEvent<HTMLInputElement> & { target: { value: string }}) => {
-        searchRef.current = e.target.value
+      <div className="flex gap-2">
+        <Input placeholder="Začněte psát IC pacienta" onKeyDown={(e: KeyboardEvent<HTMLInputElement> & { target: { value: string }}) => {
+          searchRef.current = e.target.value
 
-        if (e.key === 'Enter') {
-          refetchAutocomplete()
-          return
-        }
+          if (e.key === 'Enter') {
+            refetchAutocomplete()
+            return
+          }
 
-        debounced()
-      }} />
+          debounced()
+        }} />
+        <Button variant="outline" onClick={() => refetchAutocomplete()}><Search /></Button>
+      </div>
       <div className="h-4" />
-      <div className="flex items-center justify-start w-full">
+      <div className="flex items-start justify-start w-full gap-4">
         <Card className="w-3/6">
-          <CardHeader>
-            Vyhledávání pacientů
+          <CardHeader className="flex justify-between items-center w-full flex-row">
+            <span>Vyhledávání pacientů</span>
+            <Button className="flex items-center justify-center" variant="outline">
+              <SlidersHorizontal />
+            </Button>
           </CardHeader>
+          {data?.length > 0 && 
           <Table>
-        <TableHeader>
-          <TableRow>
-          <TableHead className="w-[40px]"></TableHead>
-            <TableHead className="w-[100px]">ic pacienta</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.map((patientId) => (
-            <TableRow key={patientId}>
-              <TableCell><User size={16} /></TableCell>
-              <TableCell className="font-medium">{patientId}</TableCell>
-              <TableCell>
-                <Button variant="outline" onClick={() => navigate(`/patient/${patientId}`)}>Otevřít <SquareArrowOutUpRight /></Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            <TableHeader>
+              <TableRow>
+              <TableHead className="w-[40px]"></TableHead>
+                <TableHead className="w-[100px]">ic pacienta</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data?.slice(0, 10).map((patientId) => (
+                <TableRow key={patientId}>
+                  <TableCell><User size={16} /></TableCell>
+                  <TableCell className="font-medium">{patientId}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" onClick={() => navigate(`/patient/${patientId}`)}>Otevřít <SquareArrowOutUpRight /></Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        }
+        </Card>
+        <Card className="w-3/6">
+          <CardHeader className="flex justify-between items-center w-full flex-row">
+              <span>Statistiky</span>
+              <Button className="flex items-center justify-center" variant="outline">
+                <SlidersHorizontal />
+              </Button>
+            </CardHeader>
         </Card>
       </div>
     </PageLayout>
