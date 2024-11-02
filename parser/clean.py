@@ -60,8 +60,8 @@ def iterate_latest_column(file_path) -> ExportedCSV:
         #     print(latest_column_value)
 
 
-input_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned.csv'
-output_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned2.csv'
+# input_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned.csv'
+# output_file_path = '/Users/mzidek/Documents/IdeaProjects/hemoconnectsources/B-IHOK-AH_HackJakBrno/B-IHOK-AH_AMB-FINALcleaned2.csv'
 
 # detect_encoding(input_file_path)
 
