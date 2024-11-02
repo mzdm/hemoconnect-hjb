@@ -1,5 +1,6 @@
 import json
 import re
+from datetime import datetime
 
 from quantulum3 import parser
 
@@ -9,10 +10,20 @@ regex = re.compile(r"^(?:\d+\.?\d*\s*)(\S+)$", re.DOTALL)
 
 def extract_unit_via_regex(list: list[KeyValue]) -> list[KeyValueWithMeta]:
     def map_to_key_value_with_meta(item: KeyValue) -> KeyValueWithMeta:
-        # if key is "date_time" or "date" or "time" or "datetime" or "date-time" or "datum"
-        is_unit_with_number = item.key not in ["date_time", "date", "time", "datetime", "date-time", "datum"]
+        date_formats = ["%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M", "%Y-%m-%d %H:%M:%S.%f"]
+        is_unit_date_time = item.key in ["date_time", "date", "time", "datetime", "date-time", "datum"]
+
+        if not is_unit_date_time:
+            for date_format in date_formats:
+                try:
+                    datetime.strptime(item.value, date_format)
+                    is_unit_date_time = True
+                    break
+                except ValueError:
+                    continue
+
         match = regex.search(item.value)
-        if match and is_unit_with_number:
+        if match and not is_unit_date_time:
             unit = match.group(1)
             # value_without_unit = re.sub(r"\s*"+unit+r"\s*", "", item.value)
             value_without_unit = re.sub(r"\s*" + re.escape(unit) + r"\s*", "", item.value)
@@ -25,11 +36,14 @@ def extract_unit_via_regex(list: list[KeyValue]) -> list[KeyValueWithMeta]:
                 unit=unit
             )
         else:
+            is_value_boolean = item.value.lower() in ["true", "false", "yes", "no", "ano", "ne"]
+            type = "datetime" if is_unit_date_time else "boolean" if is_value_boolean else "string"
+
             new_key_value = KeyValueWithMeta(
                 original_tag=item.original_tag,
                 key=item.key,
                 value=item.value,
-                type="string",
+                type=type,
                 has_unit=False,
                 unit=""
             )
