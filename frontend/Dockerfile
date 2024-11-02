@@ -2,7 +2,7 @@
 FROM node:20-alpine as build-stage
 
 WORKDIR /app
-RUN echo "VITE_API_URL="https://api.hjb.mesh.sk/api" >> .env.local
+RUN echo "VITE_API_URL=https://api.hjb.mesh.sk/api" >> .env.local
 COPY package*.json ./
 RUN npm install
 
