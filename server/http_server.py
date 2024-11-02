@@ -1,3 +1,4 @@
+import csv
 import http.server
 import json
 import socketserver
@@ -5,11 +6,18 @@ import os
 
 PORT = 8000
 
+ID_PACS_CSV_PATH = 'data/id_pacs.csv'
+id_pacs_data = []
+
+def load_id_pacs_data():
+    global id_pacs_data
+    with open(ID_PACS_CSV_PATH, mode='r', encoding='windows-1250') as file:
+        reader = csv.DictReader(file, delimiter=';')
+        id_pacs_data = [row for row in reader]
+
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def search_patient_ids(self, query):
-        # Dummy list
-        all_patient_ids = ['123', '456', '789']
-        return [pid for pid in all_patient_ids if query in pid]
+        return [row['ic_pac'] for row in id_pacs_data if query in row['ic_pac']]
 
     def end_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
@@ -39,6 +47,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 # os.chdir('/path/to/your/files')
 os.chdir(os.curdir)
+load_id_pacs_data()
 handler_object = MyHttpRequestHandler
 with socketserver.TCPServer(("", PORT), handler_object) as httpd:
     print(f"Serving at port {PORT}")
