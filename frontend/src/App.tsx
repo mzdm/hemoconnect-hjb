@@ -1,25 +1,51 @@
 import { SquareArrowOutUpRight, User } from "lucide-react";
+import React, { KeyboardEvent } from "react";
 import { PageLayout } from "./components/page-layout";
 import { Button } from "./components/ui/button";
 import { Card, CardHeader } from "./components/ui/card";
 import { Input } from "./components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./components/ui/table";
-
-const patients: Array<{ id: string }> = [{
-  id: "2135408"
-}, {
-  id: "719181"
-}, {
-  id: "257353"
-}]
+import { useQuery } from '@tanstack/react-query'
+import { useDebouncedCallback } from 'use-debounce'
+import { useNavigate } from "react-router-dom";
 
 function App() {
 
+  console.log(import.meta.env.VITE_API_URL)
+
+  const [search, setSearch] = React.useState<string>("") 
+
+  const { data, refetch: refetchAutocomplete } = useQuery({
+    queryKey: ['autocomplete'],
+    initialData: [],
+    queryFn: async (): Promise<string[]> => {
+      const data = await fetch(`${import.meta.env.VITE_API_URL}/query`, {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        method: "POST",
+        body: JSON.stringify({ patientId: search }),
+      })
+
+      const _data = await data.json()
+
+      return typeof data !== "undefined"  ? _data : []
+    }
+  })
+
+  const debounced = useDebouncedCallback(async () => {
+    refetchAutocomplete()
+  }, 200, {})
+
+  const navigate = useNavigate()
 
   return (
     <PageLayout>
       <h3 className="text-lg">Pacienti</h3>
-      <Input placeholder="Začněte psát IC pacienta" />
+      <Input placeholder="Začněte psát IC pacienta" onKeyDown={(e: KeyboardEvent<HTMLInputElement> & { target: { value: string }}) => {
+        setSearch(e.target.value)
+        debounced()
+      }} />
       <div className="h-4" />
       <div className="flex items-center justify-start w-full">
         <Card className="w-3/6">
@@ -34,12 +60,12 @@ function App() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {patients.map((patient) => (
-            <TableRow key={patient.id}>
+          {data?.map((patientId) => (
+            <TableRow key={patientId}>
               <TableCell><User size={16} /></TableCell>
-              <TableCell className="font-medium">{patient.id}</TableCell>
+              <TableCell className="font-medium">{patientId}</TableCell>
               <TableCell>
-                <Button variant="outline" onClick={() => console.error("not implemented")}>Otevřít <SquareArrowOutUpRight /></Button>
+                <Button variant="outline" onClick={() => navigate(`/patient/${patientId}`)}>Otevřít <SquareArrowOutUpRight /></Button>
               </TableCell>
             </TableRow>
           ))}
