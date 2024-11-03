@@ -29,12 +29,12 @@ def preload_data():
     with open(ID_PACS_CSV_PATH, mode='r', encoding='windows-1250') as file:
         reader = csv.DictReader(file, delimiter=';')
         id_pacs_data = [row for row in reader]
-        print("Found", len(id_pacs_data), "patient IDs")
+        print("Found", len(id_pacs_data), "patient IDs", flush=True)
 
     with open(PATIENT_AMB_CSV_PATH, mode='r', encoding='windows-1250') as file:
         reader = csv.DictReader(file, delimiter=';')
         patient_amb_data = [row for row in reader]
-        print("Found", len(patient_amb_data), "patient ambulances")
+        print("Found", len(patient_amb_data), "patient ambulances", flush=True)
 
     with open(AMB_CLEANED_FILE_PATH, mode='r', encoding='windows-1250') as file:
         reader = csv.DictReader(file, delimiter=';')
