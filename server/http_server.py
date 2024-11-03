@@ -20,8 +20,6 @@ id_pacs_data = []
 patient_amb_data = []
 amb_cleaned_data: ExportedCSV
 db_handler = DBHandler()
-db_handler.connect()
-
 openai_client: OpenAI = None
 
 def preload_data():
@@ -40,9 +38,7 @@ def preload_data():
         reader = csv.DictReader(file, delimiter=';')
         amb_cleaned_data = ExportedCSV(list(reader), reader.fieldnames)
 
-    # Initialize database connection and run migrations
-    db_handler.connect()
-    db_handler.migrate()
+
 
 def find_patient_by_patient_metadata(patient_metadata: PatientMetadata):
     for row in amb_cleaned_data:
@@ -113,6 +109,8 @@ if __name__ == '__main__':
     try:
         openai_client = initialize_client()
         preload_data()
+        db_handler.connect()
+        db_handler.migrate()
         app.run(port=PORT, debug=True)
     finally:
         db_handler.close()
