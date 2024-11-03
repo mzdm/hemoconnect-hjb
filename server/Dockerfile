@@ -24,4 +24,4 @@ ENV FLASK_ENV=production
 EXPOSE 8000
 
 # Start Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "7", "http_server:app", "--error-logfile", "gunicorn.error.log", "--access-logfile gunicorn.log", "--capture-output"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "7", "http_server:app", "--capture-output"]
