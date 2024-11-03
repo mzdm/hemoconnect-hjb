@@ -106,13 +106,20 @@ def add_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
+# Move initialization code outside the main block
+os.chdir(os.curdir)  # or set to your specific path
+openai_client = initialize_client()
+preload_data()
+db_handler.connect()
+db_handler.migrate()
+
+# Keep the app.run() part in the main block
 if __name__ == '__main__':
-    os.chdir(os.curdir)  # or set to your specific path
     try:
-        openai_client = initialize_client()
-        preload_data()
-        db_handler.connect()
-        db_handler.migrate()
         app.run(port=PORT, debug=True)
     finally:
         db_handler.close()
+
+# Add cleanup handler for when the app exits
+import atexit
+atexit.register(db_handler.close)
