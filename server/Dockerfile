@@ -21,7 +21,7 @@ COPY . .
 
 # Start Gunicorn
 ENV FLASK_ENV=production
-ENV FLASK_APP=app.py
+ENV FLASK_APP=http_server.py
 
 # Expose the port the app runs on
 EXPOSE 8000
