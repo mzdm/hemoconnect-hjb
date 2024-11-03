@@ -18,10 +18,13 @@ RUN pip install ./install/intersystems_irispython-5.0.1-8026-cp38.cp39.cp310.cp3
 # Copy the rest of the application
 COPY . .
 
+
+# Start Gunicorn
 ENV FLASK_ENV=production
+ENV FLASK_APP=app.py
 
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Start Gunicorn
-CMD ["python", "http_server.py"]
+# Start Flask development server
+CMD ["flask", "run", "--host=0.0.0.0", "--port=8000"]
