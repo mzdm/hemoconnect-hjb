@@ -38,6 +38,7 @@ services:
         - linux/amd64
     depends_on:
       - iris
+    restart: always
     networks:
       - web
       - internal
