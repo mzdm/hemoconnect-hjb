@@ -27,4 +27,4 @@ ENV FLASK_APP=http_server.py
 EXPOSE 8000
 
 # Start Flask development server
-CMD ["gunicorn", "--workers", "7", "--worker-class", "sync", "--timeout", "120", "--bind", "0.0.0.0:8000", "http_server:app"]
+CMD ["gunicorn", "--workers", "7", "--bind", "0.0.0.0:8000", "http_server:app"]
