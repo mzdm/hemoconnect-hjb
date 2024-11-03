@@ -18,11 +18,6 @@ RUN pip install ./install/intersystems_irispython-5.0.1-8026-cp38.cp39.cp310.cp3
 # Copy the rest of the application
 COPY . .
 
-# Create data directory
-RUN mkdir -p /app/data
-
-# Set environment variables
-ENV PYTHONPATH=/app
 ENV FLASK_ENV=production
 
 # Expose the port the app runs on
